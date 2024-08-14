@@ -4,20 +4,20 @@ export let userNavbar = [
         name: "home",
     },
     {
-        path: "/shop",
-        name: "shop"
+        path: "/about",
+        name: "about"
     },
     {
-        path: "/contact",
-        name: "contact"
+        path: "/shop",
+        name: "shop"
     },
     {
         path: "/blog",
         name: "blog"
     },
     {
-        path: "/about",
-        name: "about"
+        path: "/contact",
+        name: "contact"
     },
 ]
 

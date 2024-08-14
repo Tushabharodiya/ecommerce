@@ -4,8 +4,7 @@ import { useAuth } from "../context/Authentiction";
 import { adminNavbar, userNavbar } from "./Data"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
+import { useSelector } from "react-redux";
 
 
 let Navbar = () => {
@@ -31,11 +30,14 @@ let Navbar = () => {
         });
     }
 
+    let cartCount = useSelector((state) => state.adminReducer);
+    console.log(cartCount);
+
     return (
         <>
             <nav className="navbar navbar-expand-lg">
                 <div className="container">
-                    <a className="navbar-brand" href="#"><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/logo.svg" alt="logo image" /></a>
+                    <a className="navbar-brand" href="/home"><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/logo.svg" alt="logo image" /></a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -47,7 +49,10 @@ let Navbar = () => {
                                         return (
                                             <React.Fragment key={ind} >
                                                 <li className="nav-item">
-                                                    <Link className="nav-link" to={val.path}>{val.name}</Link>
+                                                    <Link className="nav-link" to={val.path}>{val.name}
+                                                        {val.name !== 'contact' && val.name !== "about" && <span><i className="fa-solid fa-angle-down ps-1"></i></span>}
+                                                    </Link>
+
                                                 </li>
                                             </React.Fragment>
                                         )
@@ -56,8 +61,8 @@ let Navbar = () => {
                             </ul>
                             <div className="head-icon  d-flex align-items-center">
                                 <Link><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-compare.svg" alt="icon image" /></Link>
-                                <Link><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-heart.svg" alt="icon image" /></Link>
-                                <Link><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-cart.svg" alt="icon image" /><span>0</span></Link>
+                                <Link to={"/wishlist"} ><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-heart.svg" alt="icon image" /><span>{cartCount.wishlist.length}</span></Link>
+                                <Link to={"/cart"}><img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-cart.svg" alt="icon image" /><span>{cartCount.cart.length}</span></Link>
                                 <div className="dropdown">
                                     <Link data-bs-toggle="dropdown">
                                         <i className="fa-regular fa-circle-user ps-3"></i>

@@ -1,8 +1,6 @@
 const { categorySchema } = require("../models");
 
 
-
-
 let getCategory = async (req, res) => {
     try {
         let category = await categorySchema.find()

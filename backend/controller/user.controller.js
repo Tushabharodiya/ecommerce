@@ -2,10 +2,9 @@ const { createToken } = require("../middleware/auth");
 const { userSchema } = require("../models");
 
 
-
+// register
 let createUser = async (req, res) => {
     try {
-
         let body = req.body;
 
         if (!body.name || !body.email || !body.password) {
@@ -29,7 +28,7 @@ let createUser = async (req, res) => {
     }
 }
 
-
+// login
 let userLogin = async (req, res) => {
     try {
 
@@ -61,7 +60,7 @@ let userLogin = async (req, res) => {
     }
 }
 
-
+// profile
 let userProfile = async (req, res) => {
     try {
 

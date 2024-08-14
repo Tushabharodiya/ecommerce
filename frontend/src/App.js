@@ -14,10 +14,14 @@ import Product from "./redux/admin/pages/Product";
 import Order from "./redux/admin/pages/Order";
 import Category from "./redux/admin/pages/Category";
 import Userlist from "./redux/admin/pages/Userlist";
-import { Adminprivate, Userprivate, userPrivete } from "./redux/private/Privatte";
+import { Adminprivate, Userprivate } from "./redux/private/Privatte";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { GET_CATEGORY_PENDING, GET_PRODUCT_PENDING } from "./redux/admin/action";
+import { GET_CART_PENDING, GET_CATEGORY_PENDING, GET_PRODUCT_PENDING, GET_WISHLIST_PENDING } from "./redux/admin/action";
+import Footer from "./redux/component/Footer";
+import Cart from "./redux/user/pages/Cart";
+import ProductDetails from "./redux/user/pages/ProductDetails";
+import Wishlist from "./redux/user/pages/Wishlist";
 
 function App() {
   const location = useLocation();
@@ -28,6 +32,8 @@ function App() {
   useEffect(() => {
     dispatch({ type: GET_CATEGORY_PENDING })
     dispatch({ type: GET_PRODUCT_PENDING })
+    dispatch({ type: GET_CART_PENDING })
+    dispatch({ type: GET_WISHLIST_PENDING })
   }, [])
   return (
 
@@ -43,6 +49,9 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/:id" element={<ProductDetails />} />
         </Route>
         <Route element={< Adminprivate />} >
           <Route path="/dashboard" element={<Dashborad />} />
@@ -53,6 +62,7 @@ function App() {
           <Route path="/userlist" element={<Userlist />} />
         </Route>
       </Routes>
+      {showNavbar && <Footer />}
     </>
   );
 }

@@ -4,6 +4,29 @@ const Footer = () => {
     return (
         <>
             <footer>
+                <section className="newslatter d-flex align-items-center">
+                    <div className="container">
+                        <div className="row align-items-center">
+                            <div className="col-lg-3">
+                                <div className="news-email d-flex align-items-center">
+                                    <img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-email.svg" alt="email icon" />
+                                    <h4 className='mb-0'>Sign up to Newsletter</h4>
+                                </div>
+                            </div>
+                            <div className="col-lg-4">
+                                <div className="news-email d-flex  ">
+                                    <h5 className='mb-0'>...and receive$25 coupon htmlFor first shopping.</h5>
+                                </div>
+                            </div>
+                            <div className="col-lg-5">
+                                <form className='form-subcriber d-flex'>
+                                    <input type="text" className="form-control bg-white font-small" placeholder="Enter your email" />
+                                    <button type='submit' className="btn bg-dark text-white">Subscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <div className="container">
                     <div className="footer-data">
                         <div className="row">

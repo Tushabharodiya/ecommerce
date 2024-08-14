@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Slider from '../../component/Slider'
 import Features from '../../component/Features'
 import Product from '../../component/Product'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Heading } from '../../atoms/Atoms'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -12,20 +12,53 @@ import { Navigation } from 'swiper/modules';
 import Category from '../../component/Category'
 import { Link } from 'react-router-dom'
 import Offer from '../../component/Offer'
-import Footer from '../../component/Footer'
+import Deals from './Deals'
+import { useAuth } from '../../context/Authentiction'
+import { GET_CART_PENDING, POST_CART_PENDING, POST_WISHLIST_PENDING } from '../../admin/action'
+import Productview from '../../component/Productview'
 
 const Home = () => {
 
   let product = useSelector((state) => state.adminReducer)
-  console.log(product);
+  // console.log(product);
 
+  const [auth, setAuth] = useAuth();
+  const [viewProduct, setViewProduct] = useState(null)
+  let dispatch = useDispatch();
   const newProduct = product.product?.filter(val => val.badges === 'new') || [];
-  console.log(newProduct);
+
+  // add to cart
+  let addCart = async (items) => {
+    let data = {
+      product: items,
+      user: auth.user._id,
+    }
+    console.log(data);
+    dispatch({ type: POST_CART_PENDING, payload: data })
+  }
+
+  // quickView
+  const quickView = (productId) => {
+    let selectQuentity = product.cart?.find((val) => val.product._id == productId)
+    // console.log(selectQuentity.quentity);
+
+    const selectedProduct = product.product?.find((val) => val._id === productId);
+    setViewProduct({ selectedProduct, selectQuentity });
+  };
+
+  // addWishlist
+  let addWishlist = async (productId) => {
+    let data = {
+      product: productId,
+      user: auth.user._id,
+    }
+    console.log(data);
+    dispatch({ type: POST_WISHLIST_PENDING, payload: data })
+
+  }
 
 
-
-
-
+  // console.log(cart);
   let feature = [
     {
       img: "https://evara-nextjs.vercel.app/assets/imgs/theme/icons/feature-1.png",
@@ -148,7 +181,7 @@ const Home = () => {
               feature.map((val, ind) => (
                 <React.Fragment key={ind}>
                   <div className="col-lg-2">
-                    <Features img={val.img} title={val.title} bgcolor={val.bgcolor} />
+                    <Features img={val.img} title={val.title} bgColor={val.bgcolor} />
                   </div>
                 </React.Fragment>
               ))
@@ -174,17 +207,47 @@ const Home = () => {
               product.product?.slice(0, 8).map((val, ind) => (
                 <React.Fragment key={ind}>
                   <div className="col-lg-3">
-                    <Product img={val.image} name={val.name} brand={val.brand} price={val.price} sale={val.badges} backimage={val.backimage} />
+                    <div className="productCard  position-relative">
+                      <Product img={val.image} name={val.name} brand={val.brand} price={val.price} sale={val.badges} backimage={val.backimage} id={val._id} />
+                      <div className="product-action product-services d-flex position-absolute">
+                        <a href="#" className='d-inline-block' data-bs-placement="top"
+                          data-bs-custom-class="custom-tooltip" data-bs-title="Quick View"
+                          onClick={() => quickView(val._id)} data-bs-toggle="modal" data-bs-target="#productview">
+                          <i className="fa-regular fa-eye me-1"></i>
+                        </a>
+                        <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top"
+                          data-bs-custom-class="custom-tooltip" onClick={() => addWishlist(val._id)} data-bs-title="add to wishlist" >
+                          <i className="fa-regular fa-heart me-1"></i>
+                        </a>
+                        <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="compare"><i className="fa-solid fa-shuffle me-1"></i></a>
+                      </div>
+                      <div className="product-cart product-action position-absolute ">
+                        <a href="#" onClick={() => addCart(val._id)} className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="add to cart"><i className="fa-solid fa-bag-shopping" ></i></a>
+                      </div>
+                    </div>
                   </div>
                 </React.Fragment>
               ))
             }
+            {/* <!-- Modal --> */}
+            <div className="modal fade" id="productview" tabIndex="-1">
+              <div className="modal-dialog modal-lg">
+                <div className="modal-content">
+                  <div className="modal-btn d-flex justify-content-end ">
+                    <button type="button" className="btn-close pe-5 pt-5" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div className="modal-body pt-0">
+                    <Productview name={viewProduct?.selectedProduct?.name} brand={viewProduct?.selectedProduct?.brand} price={viewProduct?.selectedProduct?.price} image={viewProduct?.selectedProduct?.image} backimage={viewProduct?.selectedProduct?.backimage} id={viewProduct?.selectQuentity?._id} productId={viewProduct?.selectedProduct._id} quantity={viewProduct?.selectQuentity?.quentity} />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* services */}
-      <section className="services">
+      < section className="services" >
         <div className="container">
           <div className="services-banner">
             <div className="row">
@@ -192,22 +255,22 @@ const Home = () => {
                 <div className="services-data">
                   <h4>Repair Services</h4>
                   <h1>We're an Apple <br /> Authorised Service Provider</h1>
-                  <button className='button'>learn more <i class="fa-solid fa-arrow-right-long ps-1"></i></button>
+                  <button className='button'>learn more <i className="fa-solid fa-arrow-right-long ps-1"></i></button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* category */}
-      <section className="category">
+      < section className="category" >
         <div className="container">
           <div className="cate-data d-flex justify-content-between align-items-center position-relative">
             <Heading content="Popular" title="Categories" />
             <div className="navigation position-absolute d-flex ">
-              <button className='swiper-btn-prev  .product-action '><i class="fa-solid fa-angle-left"></i></button>
-              <button className='swiper-btn-next'><i class="fa-solid fa-angle-right"></i></button>
+              <button className='swiper-btn-prev-category'><i className="fa-solid fa-angle-left"></i></button>
+              <button className='swiper-btn-next-category'><i className="fa-solid fa-angle-right"></i></button>
             </div>
           </div>
           <div className="category-details">
@@ -216,8 +279,8 @@ const Home = () => {
               slidesPerView={1}
               spaceBetween={40}
               navigation={{
-                prevEl: '.swiper-btn-prev',
-                nextEl: '.swiper-btn-next',
+                prevEl: '.swiper-btn-prev-category',
+                nextEl: '.swiper-btn-next-category',
               }}
               breakpoints={{
                 1024: {
@@ -228,11 +291,9 @@ const Home = () => {
             >
               {
                 category.map((val, ind) => (
-                  <React.Fragment key={ind}>
-                    <SwiperSlide>
-                      <Link><Category img={val.img} title={val.title} /></Link>
-                    </SwiperSlide>
-                  </React.Fragment>
+                  <SwiperSlide key={ind}>
+                    <Link><Category img={val.img} title={val.title} /></Link>
+                  </SwiperSlide>
                 ))
               }
             </Swiper>
@@ -241,7 +302,7 @@ const Home = () => {
       </section >
 
       {/* offer */}
-      <section className="offer">
+      < section className="offer" >
         <div className="container">
           <div className="row">
             {
@@ -255,17 +316,17 @@ const Home = () => {
             }
           </div>
         </div>
-      </section>
+      </section >
 
       {/* arrivals */}
-      <section className="arrivals">
+      < section className="arrivals" >
         <div className="container">
           <div className="row">
             <div className="cate-data d-flex justify-content-between align-items-center position-relative">
               <Heading content="New" title="Arrivals" />
               <div className="navigation position-absolute d-flex end-0 top-0 ">
-                <button className='swiper-btn-prev '><i class="fa-solid fa-angle-left"></i></button>
-                <button className='swiper-btn-next'><i class="fa-solid fa-angle-right"></i></button>
+                <button className='swiper-btn-prev-arrivals'><i className="fa-solid fa-angle-left"></i></button>
+                <button className='swiper-btn-next-arrivals'><i className="fa-solid fa-angle-right"></i></button>
               </div>
             </div>
             <div className="arrivals-card">
@@ -274,8 +335,8 @@ const Home = () => {
                 slidesPerView={1}
                 spaceBetween={15}
                 navigation={{
-                  prevEl: '.swiper-btn-prev',
-                  nextEl: '.swiper-btn-next',
+                  prevEl: '.swiper-btn-prev-arrivals',
+                  nextEl: '.swiper-btn-next-arrivals',
                 }}
                 breakpoints={{
                   1024: {
@@ -285,13 +346,30 @@ const Home = () => {
                 className="mySwiper"
               >
                 {
-
-
                   newProduct?.map((val, ind) => (
                     <React.Fragment key={ind}>
-                      <SwiperSlide>
-                        <Product img={val.image} name={val.name} brand={val.brand} price={val.price} sale={val.badges} backimage={val.backimage} />
-                      </SwiperSlide>
+                      <div className="col-lg-3">
+                        <SwiperSlide key={ind}>
+                          <div className="productCard  position-relative">
+                            <Product img={val.image} name={val.name} brand={val.brand} price={val.price} sale={val.badges} backimage={val.backimage} id={val._id} />
+                            <div className="product-action product-services d-flex position-absolute">
+                              <a href="#" className='d-inline-block' data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip" data-bs-title="Quick View"
+                                onClick={() => quickView(val._id)} data-bs-toggle="modal" data-bs-target="#productview">
+                                <i className="fa-regular fa-eye me-1"></i>
+                              </a>
+                              <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-custom-class="custom-tooltip" onClick={() => addWishlist(val._id)} data-bs-title="add to wishlist" >
+                                <i className="fa-regular fa-heart me-1"></i>
+                              </a>
+                              <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="compare"><i className="fa-solid fa-shuffle me-1"></i></a>
+                            </div>
+                            <div className="product-cart product-action position-absolute ">
+                              <a href="#" onClick={() => addCart(val._id)} className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="add to cart"><i className="fa-solid fa-bag-shopping" ></i></a>
+                            </div>
+                          </div>
+                        </SwiperSlide>
+                      </div>
                     </React.Fragment>
                   ))
                 }
@@ -299,10 +377,10 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* brand */}
-      <section className="brand">
+      < section className="brand" >
         <div className="container">
           <Heading content="Featured" title="Brands" />
           <div className="row">
@@ -317,10 +395,10 @@ const Home = () => {
             }
           </div>
         </div>
-      </section>
+      </section >
 
       {/* product-sale */}
-      <section className="product-sale">
+      < section className="product-sale" >
         <div className="container">
           <div className="sale-bg">
             <div className="row">
@@ -331,88 +409,46 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* deals */}
-      <section className="deals">
+      < section className="deals" >
         <div className="container">
           <div className="row">
             <div className="col-lg-3">
-              <div className="deals-data position-relative">
-                <div className="deals-img">
-                  <img src="https://evara-nextjs.vercel.app/assets/imgs/banner/banner-10.jpg" alt="deals image" />
-                </div>
-                <div className="offer-data position-absolute">
-                  <span>Shoes Zone</span>
-                  <h4>Save 17% on <br /> All Items</h4>
-                  <button>shop now <i className="fa-solid fa-arrow-right"></i></button>
-                </div>
-              </div>
+              <Offer img="https://evara-nextjs.vercel.app/assets/imgs/banner/banner-10.jpg" off="Shoes Zone" title="Save 17% on All Items" />
             </div>
             <div className="col-lg-3">
-              <div className="deals-outlet">
+              <div className="deals-outlet line">
                 <h2>Deals & Outlet</h2>
                 {
                   product.product.slice(5, 8)?.map((val, ind) => (
-                    <React.Fragment>
-                      <div className="deals-product d-flex align-items-center">
-                        <div className="deals-img">
-                          <img src={val.image} alt="bags image" />
-                        </div>
-                        <div className="deals-info ">
-                          <h4 className='mb-0'><a href="#">{val.name}</a></h4>
-                          <div className="price">
-                            <span>${val.price}</span>
-                            <span> $245.8</span>
-                          </div>
-                        </div>
-                      </div>
+                    <React.Fragment key={ind}>
+                      <Deals image={val.image} name={val.name} price={val.price} />
                     </React.Fragment>
                   ))
                 }
               </div>
             </div>
             <div className="col-lg-3">
-              <div className="deals-outlet">
+              <div className="deals-outlet line">
                 <h2>Top Selling</h2>
                 {
                   product.product.slice(9, 12)?.map((val, ind) => (
-                    <React.Fragment>
-                      <div className="deals-product d-flex align-items-center">
-                        <div className="deals-img">
-                          <img src={val.image} alt="bags image" />
-                        </div>
-                        <div className="deals-info ">
-                          <h4 className='mb-0'><a href="#">{val.name}</a></h4>
-                          <div className="price">
-                            <span>${val.price}</span>
-                            <span> $245.8</span>
-                          </div>
-                        </div>
-                      </div>
+                    <React.Fragment key={ind}>
+                      <Deals image={val.image} name={val.name} price={val.price} />
                     </React.Fragment>
                   ))
                 }
               </div>
             </div>
             <div className="col-lg-3">
-              <div className="deals-outlet">
+              <div className="deals-outlet line">
                 <h2>Hot Releases</h2>
                 {
                   product.product.slice(12, 15)?.map((val, ind) => (
-                    <React.Fragment>
-                      <div className="deals-product d-flex align-items-center">
-                        <div className="deals-img">
-                          <img src={val.image} alt="bags image" />
-                        </div>
-                        <div className="deals-info ">
-                          <h4 className='mb-0'><a href="#">{val.name}</a></h4>
-                          <div className="price">
-                            <span>${val.price}</span>
-                            <span> $245.8</span>
-                          </div>
-                        </div>
-                      </div>
+                    <React.Fragment key={ind}>
+                      <Deals image={val.image} name={val.name} price={val.price} />
                     </React.Fragment>
                   ))
                 }
@@ -420,35 +456,7 @@ const Home = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* newsletter */}
-      <section className="newslatter d-flex align-items-center">
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-3">
-              <div className="news-email d-flex align-items-center">
-                <img src="https://evara-nextjs.vercel.app/assets/imgs/theme/icons/icon-email.svg" alt="email icon" />
-                <h4 className='mb-0'>Sign up to Newsletter</h4>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="news-email d-flex  ">
-                <h5 className='mb-0'>...and receive$25 coupon for first shopping.</h5>
-              </div>
-            </div>
-            <div className="col-lg-5">
-              <form className='form-subcriber d-flex'>
-                <input type="text" className="form-control bg-white font-small" placeholder="Enter your email" />
-                <button type='submit' className="btn bg-dark text-white">Subscribe</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* footer */}
-      <Footer />
+      </section >
 
     </>
   )

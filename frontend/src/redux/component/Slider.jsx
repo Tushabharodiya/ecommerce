@@ -3,7 +3,7 @@ import React from 'react'
 const Slider = () => {
     return (
         <>
-            <div id="carouselExampleCaptions" className="carousel slide">
+            <div id="carouselExampleCaptions" className="carousel slide" data-bs-ride="true">
                 <div className="container">
                     <div className="carousel-inner">
                         <div className="carousel-item  active">
@@ -71,12 +71,12 @@ const Slider = () => {
                         </div>
                     </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                    <i class="fa-solid fa-angle-left"></i>
+                <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                    <i className="fa-solid fa-angle-left"></i>
                     <span className="visually-hidden">Previous</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                    <i class="fa-solid fa-angle-right"></i>
+                <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                    <i className="fa-solid fa-angle-right"></i>
                     <span className="visually-hidden">Next</span>
                 </button>
             </div>

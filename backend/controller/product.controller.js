@@ -1,21 +1,100 @@
-const fs = require('fs');
-const path = require('path');
-const uploadImage = require("../middleware/Coludinary")
-const { productSchema } = require("../models")
+const { productSchema } = require("../models");
 const cloudinary = require('../middleware/Coludinary')
-// const cloudinary = require('cloudinary').v2;
 
+
+
+let getAllProduct = async (req, res) => {
+
+    // const { id } = req.params;
+    const { category, price, keyword, page = 1, limit = 7, brand } = req.query;
+    // console.log(brand);
+
+
+
+    let skip = (page - 1) * limit;
+    const filter = {}
+    const categotyArray = category.split(",").map(id => id.trim());
+    // console.log(categotyArray);
+
+    // price
+    let p = price.split(",")
+    // console.log(p);
+
+    // let brandArray = brand.split(",")
+    // console.log(barndArray);
+
+
+
+    if (category && category !== 'all') {
+        filter.category = categotyArray
+    }
+    if (price) {
+        let res = filter.price = { $gte: p[0], $lte: p[1] }
+        // console.log(res)
+    }
+    if (keyword) {
+        filter.name = { $regex: keyword, $options: 'i' };
+    }
+
+    if (brand) {
+        filter.brand = brand.split(',');
+    }
+
+    try {
+        // let { id } = req.params;
+
+        // Use the id from params to filter products by categoryId
+        let products = await productSchema.find(filter).skip(skip)
+            .limit(parseInt(limit));
+        const totalCount = await productSchema.countDocuments(filter);
+
+        // console.log(totalCount);
+
+
+        // console.log(products);
+
+
+        res.status(200).json({
+            message: "success",
+            products,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(totalCount / limit),
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+
+}
 
 
 let getProduct = async (req, res) => {
     try {
 
-        let product = await productSchema.find().populate('category', 'name');
+        let product = await productSchema.find().populate('category', 'name')
 
         res.status(200).json({
             message: "product get successfully...",
             product,
         })
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+let single_product = async (req, res) => {
+    try {
+        let { id } = req.params;
+        console.log(id);
+
+        let product = await productSchema.findById(id)
+        console.log(product);
+
+        res.status(201).json({
+            message: "record get successfully...",
+            product,
+        })
+
 
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -28,7 +107,6 @@ let addProduct = async (req, res) => {
         let body = req.body;
         const image = req.files['image'];
         const backimage = req.files['backimage'];
-        // console.log(image);
 
         let firstImage = await cloudinary.uploader.upload(image[0].path);
         // console.log(firstImage)
@@ -45,8 +123,6 @@ let addProduct = async (req, res) => {
             backimage_public_id: secoundImage.public_id,
             ...body,
         }
-        // console.log(newBody);
-
 
         let product = await productSchema.create(newBody)
         product = await product.populate('category', 'name');
@@ -93,7 +169,7 @@ let deleteProduct = async (req, res) => {
 
 let updateProduct = async (req, res) => {
     try {
-        let { id } = req.params;
+        let id = req.query.id;
         let body = req.body;
 
         if (req.file) {
@@ -172,4 +248,4 @@ let updateProduct = async (req, res) => {
 
 
 
-module.exports = { getProduct, addProduct, deleteProduct, updateProduct }
+module.exports = { getProduct, addProduct, deleteProduct, updateProduct, single_product, getAllProduct }

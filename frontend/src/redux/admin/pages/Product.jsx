@@ -5,8 +5,6 @@ import { DELETE_PRODUCT_PENDING, POST_PRODUCT_PENDING } from '../action'
 
 const Product = () => {
     let product = useSelector((state) => state.adminReducer)
-    // console.log(product);
-
     let dispatch = useDispatch()
 
     let image = useRef();
@@ -33,8 +31,6 @@ const Product = () => {
             badges: badges.current.value,
         }
 
-        // console.log(data);
-
         let formdata = new FormData();
 
         formdata.append("image", data.image)
@@ -59,18 +55,9 @@ const Product = () => {
 
     }
 
-    // productStoke
-
-    let productStoke = (id, stoke, index) => {
-        console.log(stoke, "cnhbsdh");
-
-    }
-
     // remove product
     let removeProduct = (product) => {
-        // console.log(product);
         dispatch({ type: DELETE_PRODUCT_PENDING, payload: product })
-
     }
 
     return (
@@ -151,9 +138,9 @@ const Product = () => {
                                                             <td>{val.discount}</td>
                                                             <td>{val.badges}</td>
                                                             <td>
-                                                                <div className="form-check form-switch d-flex justify-content-center">
+                                                                {/* <div className="form-check form-switch d-flex justify-content-center">
                                                                     <input className="form-check-input " checked={val.stoke} type="checkbox" role="switch" />
-                                                                </div>
+                                                                </div> */}
                                                             </td>
                                                             <td><button className='cate-btn' onClick={() => removeProduct(val._id)} ><i className="fa-solid fa-trash-can pe-1"></i></button></td>
                                                             <td><button className='cate-btn' data-bs-target="#exampleModal" data-bs-toggle="modal" ><i className="fa-regular fa-pen-to-square"></i></button></td>

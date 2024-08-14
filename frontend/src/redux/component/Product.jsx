@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom';
 
 
-const Product = ({ img,backimage, name, brand, price, sale }) => {
+const Product = ({ img, backimage, name, brand, price, sale, id }) => {
     // Initialize all tooltips
     useEffect(() => {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -13,10 +14,12 @@ const Product = ({ img,backimage, name, brand, price, sale }) => {
     return (
         <>
             <div className="product-card position-relative">
-                <div className="product-img">
-                    <img src={img} alt="product image" />
-                    <img className='hover-img' src={backimage} alt="product image" />
-                </div>
+                <Link to={`/${id}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} >
+                    <div className="product-img">
+                        <img src={img} alt="product image" />
+                        <img className='hover-img' src={backimage} alt="product image" />
+                    </div>
+                </Link>
                 <div className="product-data">
                     <div className="sale  position-absolute ">
                         {sale && (
@@ -25,14 +28,9 @@ const Product = ({ img,backimage, name, brand, price, sale }) => {
                             </div>
                         )}
                     </div>
-                    <div className="product-action product-services d-flex">
-                        <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="quick view"><i class="fa-regular fa-eye me-1"></i></a>
-                        <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="add to wishlist"><i class="fa-regular fa-heart me-1"></i></a>
-                        <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="compare"><i class="fa-solid fa-shuffle me-1"></i></a>
-                    </div>
-                    <a href="#">{brand}</a>
-                    <h2 className='mb-0'><a href="#">{name}</a></h2>
-                    <div className="rating-result">
+                    <Link to={"/shop"} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>{brand}</Link>
+                    <h2 className='mb-0'><Link to={`/${id}`} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>{name}</Link></h2>
+                    <div className="star">
                         <span><i className="fa-regular fa-star"></i>
                             <i className="fa-regular fa-star"></i>
                             <i className="fa-regular fa-star"></i>
@@ -42,9 +40,6 @@ const Product = ({ img,backimage, name, brand, price, sale }) => {
                     </div>
                     <div className="price">
                         <span>${price}</span>
-                    </div>
-                    <div className="product-cart product-action ">
-                        <a href="#" className='d-inline-block' data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="add to cart"><i className="fa-solid fa-bag-shopping" ></i></a>
                     </div>
                 </div>
             </div>

@@ -16,3 +16,15 @@ export let GET_PRODUCT = "product/get";
 export let POST_PRODUCT = "product/add";
 export let DELETE_PRODUCT = "product/delete";
 export let UPDATE_PRODUCT = "product/update";
+
+// product
+export let GET_WISHLIST = "wishlist/get";
+export let POST_WISHLIST = "wishlist/add";
+export let DELETE_WISHLIST = "wishlist/delete";
+
+
+// cart
+export let GET_CART = "cart/get";
+export let POST_CART = "cart/addtocart";
+export let DELETE_CART = "cart/delete";
+export let UPDATE_CART = "cart/update";

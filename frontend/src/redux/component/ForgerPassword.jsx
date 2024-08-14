@@ -6,30 +6,25 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BASE_URL, USER_FORGOTPASSWORD } from '../constnt';
 
 const ForgerPassword = () => {
-
     let email = useRef();
     let password = useRef();
 
     let handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             let user = {
                 email: email.current.value,
                 password: password.current.value,
             }
             let res = await axios.patch(BASE_URL + USER_FORGOTPASSWORD, user)
-            // console.log(res);
             if (res) {
                 toast.success("Password successfully changed. Please log in with your new password.!", {
                     position: "top-right",
                     theme: "light",
                 })
             }
-
             email.current.value = "";
             password.current.value = ""
-
         } catch (error) {
             console.log(error);
             if (error.response.data) {

@@ -1,21 +1,19 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, {useRef, useState } from 'react'
 import Sidebar from './Sidebar'
 import { useDispatch, useSelector } from 'react-redux'
-import { DELETE_CATEGORY_PENDING, GET_CATEGORY_PENDING, POST_CATEGORY_PENDING, UPDATE_CATEGORY_PENDING } from '../action';
+import { DELETE_CATEGORY_PENDING, POST_CATEGORY_PENDING, UPDATE_CATEGORY_PENDING } from '../action';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Category = () => {
 
     let category = useSelector((state) => state.adminReducer)
-    // console.log(category);
-
     let name = useRef();
     let desc = useRef();
     const [view, setview] = useState({})
     let dispatch = useDispatch();
-   
 
+    // add category
     let addCategory = () => {
         let category = {
             name: name.current.value,
@@ -31,11 +29,10 @@ const Category = () => {
         dispatch({ type: DELETE_CATEGORY_PENDING, payload: category })
     }
 
-    // update
+    // update category
     let viewCategory = (category) => {
         setview(category)
     }
-
     let handleview = (e) => {
         setview({ ...view, [e.target.name]: e.target.value })
     }
@@ -61,8 +58,8 @@ const Category = () => {
                                                     <h4 className='mb-0'>Create Categories</h4>
                                                 </div>
                                                 <div className="card-body">
-                                                    <label>Category Title*<input type="text" ref={name} name='name' className='form-control' placeholder='enter title' /></label>
-                                                    <label>description*<input type="text" ref={desc} name='desc' className='form-control' placeholder='enter description' /></label>
+                                                    <label>Category Title*<input type="text" ref={name} name='name' className='form-control' placeHolder='enter title' /></label>
+                                                    <label>description*<input type="text" ref={desc} name='desc' className='form-control' placeHolder='enter description' /></label>
                                                     <button className='button mt-3' onClick={addCategory} >add Category</button>
                                                 </div>
                                             </div>
@@ -106,7 +103,7 @@ const Category = () => {
                                                             <label className='mt-0'>Category Title*<input type="text" value={view.name || ''} onChange={handleview} name='name' className='form-control' /></label>
                                                             <label>description*<input type="text" value={view.desc || ''} onChange={handleview} name='desc' className='form-control' /></label>
                                                         </form>
-                                                        <button className='button mt-3'  data-bs-dismiss="modal" onClick={saveCategory} >save Category</button>
+                                                        <button className='button mt-3' data-bs-dismiss="modal" onClick={saveCategory} >save Category</button>
                                                     </div>
                                                 </div>
                                             </div>

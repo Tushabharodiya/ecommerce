@@ -11,6 +11,8 @@ const Register = () => {
     let name = useRef();
     let email = useRef();
     let password = useRef();
+
+    // user register
     let handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -27,7 +29,6 @@ const Register = () => {
                     position: "top-right",
                     theme: "light",
                 })
-                // navigate("/home")
             }
             name.current.value = "";
             email.current.value = "";
@@ -47,9 +48,6 @@ const Register = () => {
                 });
             }
         }
-
-
-
     }
     return (
         <>

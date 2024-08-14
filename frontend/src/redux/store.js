@@ -7,8 +7,6 @@ import rootSaga from "./saga";
 
 
 let sagaMiddleWare = createSagaMiddleware();
-
-
 let store = createStore(
     rootReducer,
     composeWithDevTools(applyMiddleware(sagaMiddleWare))

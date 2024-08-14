@@ -7,9 +7,10 @@ const upload = multer({ storage: storage }).fields([{ name: 'image' }, { name: '
 let route = express.Router();
 
 route.get("/get", productController.getProduct);
+route.get("/category", productController.getAllProduct)
+route.get("/single-product/:id", productController.single_product)
 route.post("/add", upload, productController.addProduct);
 route.delete("/delete/:id", productController.deleteProduct);
-route.put("/update/:id", upload, productController.updateProduct)
-// route.patch("/view/:id", productController.updateProduct);
+route.put("/update", upload, productController.updateProduct)
 
 module.exports = route;
